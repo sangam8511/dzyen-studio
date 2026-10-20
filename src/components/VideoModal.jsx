@@ -1,80 +1,47 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import {
   X,
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  Maximize,
-  Minimize,
   ChevronLeft,
   ChevronRight,
   TrendingUp,
   Sparkles,
   ArrowUpRight,
-  Layers
+  Eye,
+  Clock
 } from 'lucide-react';
 import { PROJECTS } from '../data/projects';
 
 export default function VideoModal({ project, onClose, onSelectProject, onRequestProject }) {
-  const dialogRef = useRef(null);
-  const videoRef = useRef(null);
-  const progressBarRef = useRef(null);
-
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(0.85);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showControls, setShowControls] = useState(true);
-  const controlsTimeoutRef = useRef(null);
-
-  // Sync dialog visibility using native HTML5 showModal()
+  // Lock body scroll on mobile and desktop while modal is open
   useEffect(() => {
-    const dialog = dialogRef.current;
-    if (project && dialog) {
-      if (!dialog.open) {
-        dialog.showModal();
-      }
-    } else if (dialog && dialog.open) {
-      dialog.close();
+    if (project) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
     }
   }, [project]);
 
-  // Handle ESC key and light dismiss
-  const handleDialogClick = (e) => {
-    if (e.target === dialogRef.current) {
-      onClose();
-    }
-  };
-
-  const handleCancel = (e) => {
-    e.preventDefault();
-    onClose();
-  };
-
-  // Keyboard navigation & spacebar play/pause
+  // Keyboard navigation (ESC, Left, Right)
   useEffect(() => {
+    if (!project) return;
     const handleKeyDown = (e) => {
-      if (!project) return;
-      if (e.code === 'Space') {
-        e.preventDefault();
-        togglePlay();
-      } else if (e.code === 'ArrowRight') {
+      if (e.key === 'Escape') {
+        onClose();
+      } else if (e.key === 'ArrowRight') {
         goToNext();
-      } else if (e.code === 'ArrowLeft') {
+      } else if (e.key === 'ArrowLeft') {
         goToPrev();
-      } else if (e.code === 'KeyM') {
-        toggleMute();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [project, isPlaying, isMuted]);
+  }, [project]);
 
-  // Current project index for Next/Prev
-  const currentIndex = PROJECTS.findIndex((p) => p.id === project?.id);
+  if (!project) return null;
+
+  const currentIndex = PROJECTS.findIndex((p) => p.id === project.id);
   const goToNext = () => {
     if (currentIndex >= 0) {
       const nextIdx = (currentIndex + 1) % PROJECTS.length;
@@ -88,124 +55,48 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
     }
   };
 
-  // Reset and start video playback when project changes
-  useEffect(() => {
-    if (videoRef.current && project) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.volume = volume;
-      videoRef.current.muted = isMuted;
-      videoRef.current
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch(() => {
-          // If browser blocked unmuted playback, fallback to muted autoplay so video starts immediately
-          if (videoRef.current) {
-            videoRef.current.muted = true;
-            setIsMuted(true);
-            videoRef.current
-              .play()
-              .then(() => setIsPlaying(true))
-              .catch(() => setIsPlaying(false));
-          }
-        });
-    }
-  }, [project]);
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (videoRef.current.paused) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    } else {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    videoRef.current.muted = !isMuted;
-    setIsMuted(!isMuted);
-  };
-
-  const handleVolumeChange = (e) => {
-    const val = parseFloat(e.target.value);
-    setVolume(val);
-    if (videoRef.current) {
-      videoRef.current.volume = val;
-      videoRef.current.muted = val === 0;
-      setIsMuted(val === 0);
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      setCurrentTime(videoRef.current.currentTime);
-      setDuration(videoRef.current.duration || 0);
-    }
-  };
-
-  const handleScrub = (e) => {
-    if (!videoRef.current || !progressBarRef.current) return;
-    const rect = progressBarRef.current.getBoundingClientRect();
-    const pos = (e.clientX - rect.left) / rect.width;
-    const newTime = Math.max(0, Math.min(pos * (videoRef.current.duration || 0), videoRef.current.duration));
-    videoRef.current.currentTime = newTime;
-    setCurrentTime(newTime);
-  };
-
-  const toggleFullscreen = () => {
-    const container = dialogRef.current;
-    if (!container) return;
-    if (!document.fullscreenElement) {
-      container.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
-    } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
-    }
-  };
-
-  const formatTime = (secs) => {
-    if (isNaN(secs) || secs < 0) return '0:00';
-    const m = Math.floor(secs / 60);
-    const s = Math.floor(secs % 60);
-    return `${m}:${s < 10 ? '0' : ''}${s}`;
-  };
-
-  if (!project) return null;
-
   const isVertical = project.aspect === '9/16';
-  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <dialog
-      ref={dialogRef}
-      onClick={handleDialogClick}
-      onCancel={handleCancel}
-      className="fixed inset-0 m-0 w-screen h-screen max-w-none max-h-none bg-transparent p-0 flex items-center justify-center z-50 overflow-hidden"
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-0 sm:p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200"
     >
       {/* Modal Main Frame */}
       <div
         onClick={(e) => e.stopPropagation()}
         className={`relative w-full ${
           isVertical ? 'max-w-4xl' : 'max-w-6xl'
-        } max-h-[96vh] sm:max-h-[92vh] bg-[#0A0A0E] border border-white/15 rounded-2xl sm:rounded-3xl overflow-y-auto lg:overflow-hidden shadow-2xl flex flex-col lg:flex-row mx-2 sm:mx-4 my-auto animate-in fade-in zoom-in-95 duration-200`}
+        } bg-[#0A0A0E] sm:border border-white/15 sm:rounded-3xl shadow-2xl flex flex-col lg:flex-row min-h-screen sm:min-h-0 sm:max-h-[92vh] overflow-y-auto lg:overflow-hidden my-auto`}
       >
-        {/* Close Button Header */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-40 p-2 sm:p-2.5 rounded-full bg-black/80 hover:bg-black text-neutral-300 hover:text-white border border-white/20 backdrop-blur-md transition-all shadow-xl"
-          aria-label="Close video player modal"
-        >
-          <X className="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
+        {/* Floating Top Header on Mobile & Desktop */}
+        <div className="absolute top-0 inset-x-0 z-40 p-3 sm:p-4 flex items-center justify-between pointer-events-none">
+          <div className="pointer-events-auto flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-black/80 text-white border border-white/20 backdrop-blur-md">
+              <Sparkles className="w-3 h-3 text-white" />
+              {project.categoryLabel}
+            </span>
+            <span className="hidden sm:inline-block text-xs font-mono text-neutral-400 bg-black/70 px-2.5 py-1 rounded-full border border-white/10 backdrop-blur-md">
+              {currentIndex + 1} of {PROJECTS.length}
+            </span>
+          </div>
 
-        {/* Previous / Next Arrow Quick Navigation */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="pointer-events-auto p-2.5 rounded-full bg-black/80 hover:bg-white text-white hover:text-black border border-white/20 backdrop-blur-md transition-all shadow-xl hover:scale-105"
+            aria-label="Close video player modal"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Previous / Next Arrows (Desktop) */}
         <button
           type="button"
           onClick={goToPrev}
           title="Previous Video (Left Arrow)"
-          className="absolute left-3 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/70 hover:bg-black text-white border border-white/20 backdrop-blur-md transition-all hover:scale-110 hidden sm:flex items-center justify-center"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/70 hover:bg-white hover:text-black text-white border border-white/20 backdrop-blur-md transition-all hover:scale-110 hidden lg:flex items-center justify-center shadow-2xl"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -213,76 +104,66 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
           type="button"
           onClick={goToNext}
           title="Next Video (Right Arrow)"
-          className="absolute right-3 lg:right-[390px] top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/70 hover:bg-black text-white border border-white/20 backdrop-blur-md transition-all hover:scale-110 hidden sm:flex items-center justify-center"
+          className="absolute right-4 lg:right-[395px] top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/70 hover:bg-white hover:text-black text-white border border-white/20 backdrop-blur-md transition-all hover:scale-110 hidden lg:flex items-center justify-center shadow-2xl"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
 
-        {/* Video Screen Area with Google Drive Preview Player */}
-        <div className="relative flex-1 bg-black flex items-center justify-center overflow-hidden group p-2 sm:p-4 shrink-0">
-          {project.driveId ? (
-            <div
-              className={`flex items-center justify-center ${
-                isVertical
-                  ? 'h-[52vh] sm:h-[62vh] lg:h-[78vh] aspect-[9/16] max-w-full mx-auto'
-                  : 'w-full max-w-5xl aspect-video mx-auto'
-              }`}
-            >
+        {/* Video Player Display Area */}
+        <div className="relative flex-1 bg-black flex items-center justify-center pt-16 pb-4 px-3 sm:p-6 lg:p-8 shrink-0">
+          <div
+            className={`w-full flex items-center justify-center ${
+              isVertical
+                ? 'max-w-[320px] xs:max-w-[350px] sm:max-w-[380px] lg:max-w-[400px] aspect-[9/16] max-h-[62vh] sm:max-h-[75vh]'
+                : 'max-w-4xl aspect-video'
+            }`}
+          >
+            {project.driveId ? (
               <iframe
                 key={project.driveId}
                 src={`https://drive.google.com/file/d/${project.driveId}/preview`}
                 title={project.title}
-                className="w-full h-full rounded-xl sm:rounded-2xl border border-white/15 shadow-2xl bg-black"
+                className="w-full h-full rounded-2xl border border-white/15 shadow-2xl bg-black"
                 allow="autoplay; encrypted-media; fullscreen"
                 allowFullScreen
               />
-            </div>
-          ) : (
-            <video
-              ref={videoRef}
-              src={project.videoSrc}
-              controls
-              playsInline
-              className={`w-full max-h-[82vh] object-contain ${
-                isVertical ? 'max-w-[380px]' : 'max-w-4xl'
-              }`}
-            />
-          )}
+            ) : (
+              <video
+                src={project.videoSrc}
+                controls
+                playsInline
+                className="w-full h-full rounded-2xl object-contain bg-black"
+              />
+            )}
+          </div>
         </div>
 
         {/* Project Details Sidebar / Drawer */}
-        <div className="w-full lg:w-[380px] p-4 sm:p-6 lg:p-7 bg-[#0A0A0A] border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col justify-between overflow-y-visible lg:overflow-y-auto lg:max-h-[82vh] shrink-0">
+        <div className="w-full lg:w-[380px] p-5 sm:p-6 lg:p-7 bg-[#0A0A0A] border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col justify-between overflow-y-visible lg:overflow-y-auto lg:max-h-[92vh]">
           <div>
-            {/* Category & Status */}
-            <div className="flex items-center justify-between gap-2 mb-3">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-white/10 text-white border border-white/15">
-                <Sparkles className="w-3 h-3 text-white" />
-                {project.categoryLabel}
-              </span>
-              <span className="text-xs font-mono text-neutral-400">
-                {currentIndex + 1} of {PROJECTS.length}
-              </span>
-            </div>
-
             {/* Title & Client */}
             <h2 className="text-xl sm:text-2xl font-display font-extrabold text-white leading-tight mb-2">
               {project.title}
             </h2>
-            <div className="text-xs font-mono text-neutral-400 uppercase tracking-wider mb-4">
-              Client: <span className="text-white font-medium">{project.client}</span>
+            <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-5">
+              <span>CLIENT:</span>
+              <span className="text-white font-medium">{project.client}</span>
+              <span className="text-neutral-600">•</span>
+              <Clock className="w-3.5 h-3.5 text-neutral-400" />
+              <span>{project.duration}</span>
             </div>
 
-            {/* Performance Stats Pill */}
-            <div className="grid grid-cols-2 gap-2 p-3 rounded-xl bg-white/5 border border-white/10 font-mono text-xs mb-5">
+            {/* Performance Metrics */}
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 grid grid-cols-2 gap-3 mb-5">
               <div>
-                <div className="text-neutral-400 text-[10px] uppercase">Performance</div>
-                <div className="text-white font-bold text-sm flex items-center gap-1 mt-0.5">
-                  <TrendingUp className="w-3.5 h-3.5 text-neutral-400" />
-                  {project.views}
+                <div className="text-neutral-400 text-[10px] uppercase font-mono">Performance</div>
+                <div className="text-white font-bold text-sm mt-0.5 flex items-center gap-1">
+                  <TrendingUp className="w-3.5 h-3.5 text-white" />
+                  <span>{project.views}</span>
                 </div>
               </div>
               <div>
-                <div className="text-neutral-400 text-[10px] uppercase">Watch-Through</div>
+                <div className="text-neutral-400 text-[10px] uppercase font-mono">Watch-Through</div>
                 <div className="text-white font-bold text-sm mt-0.5">
                   {project.retention || '88% Retention'}
                 </div>
@@ -334,14 +215,14 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
             </div>
           </div>
 
-          {/* Action CTA */}
-          <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
+          {/* Action CTAs */}
+          <div className="pt-4 border-t border-white/10 flex flex-col gap-2.5">
             {project.driveId && (
               <a
                 href={`https://drive.google.com/file/d/${project.driveId}/view`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs flex items-center justify-center gap-2 border border-white/15 transition-all"
+                className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs flex items-center justify-center gap-2 border border-white/15 transition-all shadow-md active:scale-98"
               >
                 <span>Watch Full Quality in Google Drive</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
@@ -354,7 +235,7 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
                 onClose();
                 onRequestProject(project);
               }}
-              className="w-full py-3.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-[1.02]"
+              className="w-full py-3.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-[1.01] active:scale-98"
             >
               <span>Request Similar Video</span>
               <ArrowUpRight className="w-4 h-4" />
@@ -365,6 +246,6 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
           </div>
         </div>
       </div>
-    </dialog>
+    </div>
   );
 }
