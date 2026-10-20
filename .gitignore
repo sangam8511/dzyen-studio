@@ -31,3 +31,6 @@ public/videos/**/*.mp4
 
 # OS
 Thumbs.db
+
+# Local Netlify folder
+.netlify
