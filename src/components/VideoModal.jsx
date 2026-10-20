@@ -186,16 +186,18 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
       {/* Modal Main Frame */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-6xl max-h-[94vh] bg-[#0A0A0E] border border-white/15 rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row mx-4 my-auto animate-in fade-in zoom-in-95 duration-200"
+        className={`relative w-full ${
+          isVertical ? 'max-w-4xl' : 'max-w-6xl'
+        } max-h-[96vh] sm:max-h-[92vh] bg-[#0A0A0E] border border-white/15 rounded-2xl sm:rounded-3xl overflow-y-auto lg:overflow-hidden shadow-2xl flex flex-col lg:flex-row mx-2 sm:mx-4 my-auto animate-in fade-in zoom-in-95 duration-200`}
       >
         {/* Close Button Header */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-40 p-2.5 rounded-full bg-black/70 hover:bg-black text-neutral-300 hover:text-white border border-white/15 backdrop-blur-md transition-all shadow-lg"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-40 p-2 sm:p-2.5 rounded-full bg-black/80 hover:bg-black text-neutral-300 hover:text-white border border-white/20 backdrop-blur-md transition-all shadow-xl"
           aria-label="Close video player modal"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
         {/* Previous / Next Arrow Quick Navigation */}
@@ -203,7 +205,7 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
           type="button"
           onClick={goToPrev}
           title="Previous Video (Left Arrow)"
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/15 backdrop-blur-md transition-all hover:scale-110 hidden sm:flex items-center justify-center"
+          className="absolute left-3 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/70 hover:bg-black text-white border border-white/20 backdrop-blur-md transition-all hover:scale-110 hidden sm:flex items-center justify-center"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -211,22 +213,26 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
           type="button"
           onClick={goToNext}
           title="Next Video (Right Arrow)"
-          className="absolute right-4 lg:right-[390px] top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/15 backdrop-blur-md transition-all hover:scale-110 hidden sm:flex items-center justify-center"
+          className="absolute right-3 lg:right-[390px] top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/70 hover:bg-black text-white border border-white/20 backdrop-blur-md transition-all hover:scale-110 hidden sm:flex items-center justify-center"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
 
         {/* Video Screen Area with Google Drive Preview Player */}
-        <div className="relative flex-1 bg-black flex items-center justify-center min-h-[360px] sm:min-h-[480px] lg:min-h-[620px] overflow-hidden group p-2 sm:p-4">
+        <div className="relative flex-1 bg-black flex items-center justify-center overflow-hidden group p-2 sm:p-4 shrink-0">
           {project.driveId ? (
-            <div className={`w-full h-full flex items-center justify-center ${
-              isVertical ? 'max-w-[420px] aspect-[9/16]' : 'max-w-5xl aspect-video'
-            }`}>
+            <div
+              className={`flex items-center justify-center ${
+                isVertical
+                  ? 'h-[52vh] sm:h-[62vh] lg:h-[78vh] aspect-[9/16] max-w-full mx-auto'
+                  : 'w-full max-w-5xl aspect-video mx-auto'
+              }`}
+            >
               <iframe
                 key={project.driveId}
                 src={`https://drive.google.com/file/d/${project.driveId}/preview`}
                 title={project.title}
-                className="w-full h-full rounded-2xl border border-white/15 shadow-2xl bg-black min-h-[340px] sm:min-h-[460px] lg:min-h-[580px]"
+                className="w-full h-full rounded-xl sm:rounded-2xl border border-white/15 shadow-2xl bg-black"
                 allow="autoplay; encrypted-media; fullscreen"
                 allowFullScreen
               />
@@ -238,14 +244,14 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
               controls
               playsInline
               className={`w-full max-h-[82vh] object-contain ${
-                isVertical ? 'max-w-[400px]' : 'max-w-4xl'
+                isVertical ? 'max-w-[380px]' : 'max-w-4xl'
               }`}
             />
           )}
         </div>
 
         {/* Project Details Sidebar / Drawer */}
-        <div className="w-full lg:w-[380px] p-6 lg:p-7 bg-[#0A0A0A] border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col justify-between overflow-y-auto max-h-[40vh] lg:max-h-[82vh]">
+        <div className="w-full lg:w-[380px] p-4 sm:p-6 lg:p-7 bg-[#0A0A0A] border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col justify-between overflow-y-visible lg:overflow-y-auto lg:max-h-[82vh] shrink-0">
           <div>
             {/* Category & Status */}
             <div className="flex items-center justify-between gap-2 mb-3">
