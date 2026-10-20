@@ -88,13 +88,26 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
     }
   };
 
-  // Reset video states when project changes
+  // Reset and start video playback when project changes
   useEffect(() => {
-    if (videoRef.current) {
+    if (videoRef.current && project) {
       videoRef.current.currentTime = 0;
       videoRef.current.volume = volume;
       videoRef.current.muted = isMuted;
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+      videoRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => {
+          // If browser blocked unmuted playback, fallback to muted autoplay so video starts immediately
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            setIsMuted(true);
+            videoRef.current
+              .play()
+              .then(() => setIsPlaying(true))
+              .catch(() => setIsPlaying(false));
+          }
+        });
     }
   }, [project]);
 
@@ -203,105 +216,32 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
           <ChevronRight className="w-5 h-5" />
         </button>
 
-        {/* Video Screen Area */}
-        <div className="relative flex-1 bg-black flex items-center justify-center min-h-[320px] sm:min-h-[460px] lg:min-h-[580px] overflow-hidden group">
-          <video
-            ref={videoRef}
-            src={project.videoSrc}
-            preload="none"
-            playsInline
-            onTimeUpdate={handleTimeUpdate}
-            onEnded={() => setIsPlaying(false)}
-            onClick={togglePlay}
-            className={`w-full max-h-[82vh] object-contain cursor-pointer ${
-              isVertical ? 'max-w-[400px]' : 'max-w-4xl'
-            }`}
-          />
-
-          {/* Big Play Button Overlay when Paused */}
-          {!isPlaying && (
-            <button
-              type="button"
-              onClick={togglePlay}
-              className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-opacity"
-            >
-              <div className="w-20 h-20 rounded-full bg-white text-black flex items-center justify-center shadow-2xl hover:scale-110 transition-transform">
-                <Play className="w-8 h-8 fill-black ml-1" />
-              </div>
-            </button>
-          )}
-
-          {/* Custom Video Controls Bar */}
-          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent flex flex-col gap-2 z-20">
-            {/* Timeline Progress Bar */}
-            <div
-              ref={progressBarRef}
-              onClick={handleScrub}
-              className="relative w-full h-2 bg-white/20 hover:h-3 rounded-full cursor-pointer transition-all duration-150 overflow-hidden"
-            >
-              <div
-                className="h-full bg-white rounded-full"
-                style={{ width: `${progressPercent}%` }}
+        {/* Video Screen Area with Google Drive Preview Player */}
+        <div className="relative flex-1 bg-black flex items-center justify-center min-h-[360px] sm:min-h-[480px] lg:min-h-[620px] overflow-hidden group p-2 sm:p-4">
+          {project.driveId ? (
+            <div className={`w-full h-full flex items-center justify-center ${
+              isVertical ? 'max-w-[420px] aspect-[9/16]' : 'max-w-5xl aspect-video'
+            }`}>
+              <iframe
+                key={project.driveId}
+                src={`https://drive.google.com/file/d/${project.driveId}/preview`}
+                title={project.title}
+                className="w-full h-full rounded-2xl border border-white/15 shadow-2xl bg-black min-h-[340px] sm:min-h-[460px] lg:min-h-[580px]"
+                allow="autoplay; encrypted-media; fullscreen"
+                allowFullScreen
               />
             </div>
-
-            {/* Bottom Controls Row */}
-            <div className="flex items-center justify-between text-white text-xs font-mono pt-1">
-              {/* Play/Pause & Time */}
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={togglePlay}
-                  className="p-1.5 hover:text-neutral-300 transition-colors"
-                >
-                  {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-white" />}
-                </button>
-
-                <div className="text-neutral-300 text-xs">
-                  {formatTime(currentTime)} / {formatTime(duration || 0)}
-                </div>
-              </div>
-
-              {/* Volume & Fullscreen */}
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5 group/vol">
-                  <button
-                    type="button"
-                    onClick={toggleMute}
-                    className="p-1 hover:text-neutral-300 transition-colors"
-                  >
-                    {isMuted || volume === 0 ? (
-                      <VolumeX className="w-4 h-4 text-neutral-400" />
-                    ) : (
-                      <Volume2 className="w-4 h-4" />
-                    )}
-                  </button>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.05"
-                    value={isMuted ? 0 : volume}
-                    onChange={handleVolumeChange}
-                    className="w-16 h-1 accent-white bg-white/20 rounded-lg cursor-pointer"
-                  />
-                </div>
-
-                <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-white/10 text-[10px] text-neutral-300">
-                  4K 60FPS
-                </span>
-
-                <button
-                  type="button"
-                  onClick={toggleFullscreen}
-                  className="p-1.5 hover:text-neutral-300 transition-colors"
-                  title="Toggle Fullscreen"
-                >
-                  {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-          </div>
+          ) : (
+            <video
+              ref={videoRef}
+              src={project.videoSrc}
+              controls
+              playsInline
+              className={`w-full max-h-[82vh] object-contain ${
+                isVertical ? 'max-w-[400px]' : 'max-w-4xl'
+              }`}
+            />
+          )}
         </div>
 
         {/* Project Details Sidebar / Drawer */}
@@ -390,6 +330,18 @@ export default function VideoModal({ project, onClose, onSelectProject, onReques
 
           {/* Action CTA */}
           <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
+            {project.driveId && (
+              <a
+                href={`https://drive.google.com/file/d/${project.driveId}/view`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-xs flex items-center justify-center gap-2 border border-white/15 transition-all"
+              >
+                <span>Watch Full Quality in Google Drive</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            )}
+
             <button
               type="button"
               onClick={() => {

@@ -65,21 +65,16 @@ export default function VideoCard({ project, onSelect }) {
           </div>
         )}
 
-        {/* Video — src only attached after card enters viewport */}
-        {isInView && (
-          <video
-            ref={videoRef}
-            src={project.videoSrc}
-            preload="none"
-            muted
-            playsInline
-            loop
-            onLoadedData={() => setVideoReady(true)}
-            className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
-              videoReady ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
-        )}
+        {/* High-res Google Drive Thumbnail Poster */}
+        <img
+          src={project.poster || '/hero-poster.jpg'}
+          alt={project.title}
+          loading="lazy"
+          onLoad={() => setVideoReady(true)}
+          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${
+            videoReady ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
 
         {/* Ambient Overlay Vignette */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 pointer-events-none" />

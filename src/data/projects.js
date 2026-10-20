@@ -10,6 +10,8 @@ export const PROJECTS = [
   // --- SAAS & PRODUCT (16:9 Widescreen) ---
   {
     id: 'saas-latest',
+    driveId: '11imrkP0_iXMZFgXeH7BYulg8ehWqFrZU',
+    poster: 'https://lh3.googleusercontent.com/d/11imrkP0_iXMZFgXeH7BYulg8ehWqFrZU=w800',
     title: 'NextGen Cloud Platform Walkthrough',
     category: 'saas',
     categoryLabel: 'SaaS & Product',
@@ -27,6 +29,8 @@ export const PROJECTS = [
   },
   {
     id: 'saas-scripted',
+    driveId: '1YKr9Gd8YX8gRd6VxyoY6dL2cEueXI7q_',
+    poster: 'https://lh3.googleusercontent.com/d/1YKr9Gd8YX8gRd6VxyoY6dL2cEueXI7q_=w800',
     title: 'Scripted Automation & Workflow Engine',
     category: 'saas',
     categoryLabel: 'SaaS & Product',
@@ -44,6 +48,8 @@ export const PROJECTS = [
   },
   {
     id: 'saas-trading',
+    driveId: '1miSB-n9Ti-dodwUamTFCKqPiqnmOKZWi',
+    poster: 'https://lh3.googleusercontent.com/d/1miSB-n9Ti-dodwUamTFCKqPiqnmOKZWi=w800',
     title: 'Real-Time Trading Analytics Suite',
     category: 'saas',
     categoryLabel: 'SaaS & Product',
@@ -63,6 +69,8 @@ export const PROJECTS = [
   // --- SHORT-FORM & VIRAL (9:16 Vertical) ---
   {
     id: 'short-founder',
+    driveId: '1clzPn2mUrAeNxPmFJ_SIsA4_B8FXMpbU',
+    poster: 'https://lh3.googleusercontent.com/d/1clzPn2mUrAeNxPmFJ_SIsA4_B8FXMpbU=w800',
     title: 'From 0 to 7 Figures: The Founder Dilemma',
     category: 'short',
     categoryLabel: 'Viral Storytelling',
@@ -80,6 +88,8 @@ export const PROJECTS = [
   },
   {
     id: 'short-finance',
+    driveId: '108JyzoyflO5LYFt_Dr973mMvfNSo4ZoF',
+    poster: 'https://lh3.googleusercontent.com/d/108JyzoyflO5LYFt_Dr973mMvfNSo4ZoF=w800',
     title: 'The Compound Wealth Formula',
     category: 'short',
     categoryLabel: 'Fintech Short',
@@ -97,6 +107,8 @@ export const PROJECTS = [
   },
   {
     id: 'short-doctor',
+    driveId: '19gwUaSvOlLFbYaaKBMCrNlRs1W204nVz',
+    poster: 'https://lh3.googleusercontent.com/d/19gwUaSvOlLFbYaaKBMCrNlRs1W204nVz=w800',
     title: 'Medical Truths & Healthcare Insights',
     category: 'short',
     categoryLabel: 'Educational Reel',
@@ -114,6 +126,8 @@ export const PROJECTS = [
   },
   {
     id: 'short-kashmir',
+    driveId: '1mykGxV8IVmxge4SrXlDD8E37UbbxRklM',
+    poster: 'https://lh3.googleusercontent.com/d/1mykGxV8IVmxge4SrXlDD8E37UbbxRklM=w800',
     title: 'Cinematic Travel: Explore Kashmir',
     category: 'short',
     categoryLabel: 'Cinematic Lifestyle',
@@ -131,6 +145,8 @@ export const PROJECTS = [
   },
   {
     id: 'short-aec',
+    driveId: '1J9zKbPKmeuP6C7HpMN1tJM5lhN8rgkWE',
+    poster: 'https://lh3.googleusercontent.com/d/1J9zKbPKmeuP6C7HpMN1tJM5lhN8rgkWE=w800',
     title: 'Global Education & Career Summit',
     category: 'short',
     categoryLabel: 'Event Promo',
@@ -148,6 +164,8 @@ export const PROJECTS = [
   },
   {
     id: 'short-navratri',
+    driveId: '1WY9r8BKP02JB_eIrL9hdo9CL6-v8Ka6X',
+    poster: 'https://lh3.googleusercontent.com/d/1WY9r8BKP02JB_eIrL9hdo9CL6-v8Ka6X=w800',
     title: 'Festive Energy & Cultural Motion',
     category: 'short',
     categoryLabel: 'Cultural & Motion',
@@ -165,6 +183,8 @@ export const PROJECTS = [
   },
   {
     id: 'short-cinematic-02',
+    driveId: '1Eo8oxQoWywtq2F9hCQA_QGkPYX-BsYo6',
+    poster: 'https://lh3.googleusercontent.com/d/1Eo8oxQoWywtq2F9hCQA_QGkPYX-BsYo6=w800',
     title: 'Urban Commercial Spot: Street Pulse',
     category: 'short',
     categoryLabel: 'Commercial Short',
@@ -184,6 +204,8 @@ export const PROJECTS = [
   // --- PODCAST REELS (9:16 Vertical) ---
   {
     id: 'podcast-clip-01',
+    driveId: '1YsVV-2ZekX5sc7UGOVCfOmxoaBKBHg08',
+    poster: 'https://lh3.googleusercontent.com/d/1YsVV-2ZekX5sc7UGOVCfOmxoaBKBHg08=w800',
     title: 'The Unfiltered Truth: Podcast Clip',
     category: 'podcast',
     categoryLabel: 'Podcast Reel',
@@ -201,6 +223,8 @@ export const PROJECTS = [
   },
   {
     id: 'podcast-mahabharata',
+    driveId: '1CLKIoQuQYPz6oI6SHrzVHuX6cYcH1B-S',
+    poster: 'https://lh3.googleusercontent.com/d/1CLKIoQuQYPz6oI6SHrzVHuX6cYcH1B-S=w800',
     title: 'Ancient Warfare Strategies in Modern Times',
     category: 'podcast',
     categoryLabel: 'Podcast Reel',
@@ -218,6 +242,8 @@ export const PROJECTS = [
   },
   {
     id: 'podcast-actor',
+    driveId: '19P2eq5VwE1OV6gmmTkLpKjKf4fctiuFY',
+    poster: 'https://lh3.googleusercontent.com/d/19P2eq5VwE1OV6gmmTkLpKjKf4fctiuFY=w800',
     title: 'Remembering the Comedy Legend',
     category: 'podcast',
     categoryLabel: 'Podcast Reel',
@@ -235,6 +261,8 @@ export const PROJECTS = [
   },
   {
     id: 'podcast-sequence-02',
+    driveId: '1QU0W-iLamToaJmnGEo5Zrl576mXDCpf8',
+    poster: 'https://lh3.googleusercontent.com/d/1QU0W-iLamToaJmnGEo5Zrl576mXDCpf8=w800',
     title: 'Mindset & Tactical Execution',
     category: 'podcast',
     categoryLabel: 'Podcast Reel',
@@ -252,6 +280,8 @@ export const PROJECTS = [
   },
   {
     id: 'podcast-talk-06',
+    driveId: '1BmUVlVKJy1x-rsgJPDS21VhSSq2giDsI',
+    poster: 'https://lh3.googleusercontent.com/d/1BmUVlVKJy1x-rsgJPDS21VhSSq2giDsI=w800',
     title: 'Raw Truth on Scaling Companies',
     category: 'podcast',
     categoryLabel: 'Podcast Reel',
@@ -269,6 +299,8 @@ export const PROJECTS = [
   },
   {
     id: 'podcast-sample-talk',
+    driveId: '1FkH1S6dDB08HudSjdVLfdSfbUO9-UXTS',
+    poster: 'https://lh3.googleusercontent.com/d/1FkH1S6dDB08HudSjdVLfdSfbUO9-UXTS=w800',
     title: 'Mastering The Creative Flow State',
     category: 'podcast',
     categoryLabel: 'Podcast Reel',
@@ -288,6 +320,8 @@ export const PROJECTS = [
   // --- AI & MOTION FX (9:16 Vertical) ---
   {
     id: 'ai-comic-style',
+    driveId: '121ZI0-_MKKhe22uBi0qc3mA8rODhu8Jq',
+    poster: 'https://lh3.googleusercontent.com/d/121ZI0-_MKKhe22uBi0qc3mA8rODhu8Jq=w800',
     title: 'Cyberpunk Comic Style Transformation',
     category: 'ai',
     categoryLabel: 'AI & Motion FX',
@@ -305,6 +339,8 @@ export const PROJECTS = [
   },
   {
     id: 'ai-eat-smart',
+    driveId: '1jk9TAtOM5RtJ1Ocqt7qEZB6d5u1XxPhd',
+    poster: 'https://lh3.googleusercontent.com/d/1jk9TAtOM5RtJ1Ocqt7qEZB6d5u1XxPhd=w800',
     title: 'Eat Smart, Track Smart: PingTop App',
     category: 'ai',
     categoryLabel: 'AI & Motion FX',
@@ -322,6 +358,8 @@ export const PROJECTS = [
   },
   {
     id: 'ai-did-you-know',
+    driveId: '1qn21dLmGWqF8nmUJUMHfqoXk0msr4kBj',
+    poster: 'https://lh3.googleusercontent.com/d/1qn21dLmGWqF8nmUJUMHfqoXk0msr4kBj=w800',
     title: 'Did You Know? High-Tech Infotainment',
     category: 'ai',
     categoryLabel: 'AI & Motion FX',
@@ -339,6 +377,8 @@ export const PROJECTS = [
   },
   {
     id: 'ai-coins-pingtop',
+    driveId: '1lxQ1m11cVCTK7AXCnBfqMCug2-eDuJwm',
+    poster: 'https://lh3.googleusercontent.com/d/1lxQ1m11cVCTK7AXCnBfqMCug2-eDuJwm=w800',
     title: 'Gamified Rewards & Coin Physics',
     category: 'ai',
     categoryLabel: 'AI & Motion FX',
@@ -356,6 +396,8 @@ export const PROJECTS = [
   },
   {
     id: 'ai-earn-peacefully',
+    driveId: '1m4g3SMQ9RDVjsNgTj9sE72QR1dKT6WGL',
+    poster: 'https://lh3.googleusercontent.com/d/1m4g3SMQ9RDVjsNgTj9sE72QR1dKT6WGL=w800',
     title: 'Financial Peace of Mind: Visual Manifesto',
     category: 'ai',
     categoryLabel: 'AI & Motion FX',

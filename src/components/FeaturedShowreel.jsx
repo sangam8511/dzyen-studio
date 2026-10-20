@@ -117,17 +117,11 @@ export default function FeaturedShowreel({ onSelectProject }) {
               onClick={() => onSelectProject(featuredItem)}
               className="lg:col-span-7 relative rounded-2xl overflow-hidden border border-white/20 bg-black cursor-pointer aspect-video shadow-2xl group/player"
             >
-              {isInView && (
-                <video
-                  ref={videoRef}
-                  src={featuredItem.videoSrc}
-                  preload="none"
-                  loop
-                  muted={isMuted}
-                  playsInline
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover/player:scale-105"
-                />
-              )}
+              <img
+                src={featuredItem.poster || '/hero-poster.jpg'}
+                alt={featuredItem.title}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover/player:scale-105"
+              />
 
               {/* Overlay Vignette */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
